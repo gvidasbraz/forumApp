@@ -243,6 +243,7 @@ exports.changeProfilePicture = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Image updated successfully',
+      _id: existingUser._id,
       username: username,
       role: existingUser.role,
       profileImage: existingUser.profileImage,
@@ -380,7 +381,6 @@ exports.getUserChats = async (req, res) => {
       $or: [{ receiver: user }, { sender: user }],
     }).sort({ timestamp: 1 });
 
-    // Calculate unread message count for each chat user
     const unreadMessageCounts = {};
     chatHistory.forEach((message) => {
       const otherUserId =
@@ -397,7 +397,6 @@ exports.getUserChats = async (req, res) => {
       }
     });
 
-    // Extract unique values from "sender" and "receiver" fields
     const uniqueSenders = [
       ...new Set(chatHistory.map((message) => message.sender)),
     ];
@@ -405,13 +404,11 @@ exports.getUserChats = async (req, res) => {
       ...new Set(chatHistory.map((message) => message.receiver)),
     ];
 
-    // Combine unique values from "sender" and "receiver" fields
     const uniqueUsers = [...new Set([...uniqueSenders, ...uniqueReceivers])];
     const chatUsers = await userSchema
       .find({ _id: { $in: uniqueUsers } })
       .select('-password -role');
 
-    // Add unreadMessageCount to each chat user
     const usersWithUnreadCount = chatUsers.map((chatUser) => ({
       ...chatUser.toObject(),
       unreadMessageCount: unreadMessageCounts[chatUser._id] || 0,

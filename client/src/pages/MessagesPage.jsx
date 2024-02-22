@@ -102,6 +102,9 @@ function MessagesPage() {
                   >
                     <img src={users.profileImage} alt='' />
                     {users.username}
+                    {users.unreadMessageCount > 0
+                      ? ` (${users.unreadMessageCount})`
+                      : ''}
                   </div>
                 ))}
               </div>

@@ -39,7 +39,9 @@ function ProfilePage() {
       .post('changeProfilePicture', { token, newProfileImage })
       .then((response) => {
         if (response.success) {
+          console.log(response);
           setUser({
+            id: response._id,
             username: response.username,
             role: response.role,
             profileImage: response.profileImage,

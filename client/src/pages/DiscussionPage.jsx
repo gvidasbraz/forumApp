@@ -172,7 +172,11 @@ function DiscussionPage() {
                       (part && part.startsWith('https://')) ||
                       (part && part.startsWith('http://'))
                     ) {
-                      return <a href={part}>{part}</a>;
+                      return (
+                        <a href={part} key={index}>
+                          {part}
+                        </a>
+                      );
                     } else {
                       return (
                         <div
